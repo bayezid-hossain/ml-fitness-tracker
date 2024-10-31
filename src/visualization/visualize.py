@@ -8,150 +8,150 @@ import matplotlib as mpl
 
 df = pd.read_pickle("../../data/interim/01_data_processed.pkl")
 
-# --------------------------------------------------------------
-# Plot single columns
-# --------------------------------------------------------------
+# # --------------------------------------------------------------
+# # Plot single columns
+# # --------------------------------------------------------------
 
-set_df = df[df["set"] == 1]
+# set_df = df[df["set"] == 1]
 
-plt.plot(set_df["acc_y"])
-plt.plot(set_df["acc_y"].reset_index(drop=True))
-
-
-# --------------------------------------------------------------
-# Plot all exercises
-# --------------------------------------------------------------
-
-for label in df["label"].unique():
-    subset = df[df["label"] == label]
-    fig, ax = plt.subplots()
-    plt.plot(subset["acc_y"].reset_index(drop=True), label=label)
-    plt.legend()
-    plt.show()
-for label in df["label"].unique():
-    subset = df[df["label"] == label]
-    fig, ax = plt.subplots()
-    plt.plot(subset[:100]["acc_y"].reset_index(drop=True), label=label)
-    plt.legend()
-    plt.show()
-
-# --------------------------------------------------------------
-# Adjust plot settings
-# --------------------------------------------------------------
-
-mpl.style.use("seaborn-v0_8-deep")
-
-mpl.rcParams["figure.figsize"] = (20, 5)
-mpl.rcParams["figure.dpi"] = 100
-
-# --------------------------------------------------------------
-# Compare medium vs. heavy sets
-# --------------------------------------------------------------
-
-category_df = df.query("label=='squat'").query("participant=='A'").reset_index()
-
-fig, ax = plt.subplots()
-ax.set_ylabel("acc_y")
-ax.set_xlabel("samples")
-
-category_df.groupby(["category"])["acc_y"].plot()
-plt.legend()
+# plt.plot(set_df["acc_y"])
+# plt.plot(set_df["acc_y"].reset_index(drop=True))
 
 
-# --------------------------------------------------------------
-# Compare participants
-# --------------------------------------------------------------
-participants_df = df.query("label=='bench'").sort_values("participant").reset_index()
+# # --------------------------------------------------------------
+# # Plot all exercises
+# # --------------------------------------------------------------
 
-fig, ax = plt.subplots()
-ax.set_ylabel("acc_y")
-ax.set_xlabel("samples")
+# for label in df["label"].unique():
+#     subset = df[df["label"] == label]
+#     fig, ax = plt.subplots()
+#     plt.plot(subset["acc_y"].reset_index(drop=True), label=label)
+#     plt.legend()
+#     plt.show()
+# for label in df["label"].unique():
+#     subset = df[df["label"] == label]
+#     fig, ax = plt.subplots()
+#     plt.plot(subset[:100]["acc_y"].reset_index(drop=True), label=label)
+#     plt.legend()
+#     plt.show()
 
-participants_df.groupby(["participant"])["acc_y"].plot()
-plt.legend()
+# # --------------------------------------------------------------
+# # Adjust plot settings
+# # --------------------------------------------------------------
 
+# mpl.style.use("seaborn-v0_8-deep")
 
-# --------------------------------------------------------------
-# Plot multiple axis
-# --------------------------------------------------------------
+# mpl.rcParams["figure.figsize"] = (20, 5)
+# mpl.rcParams["figure.dpi"] = 100
 
-label = "squat"
-participant = "A"
+# # --------------------------------------------------------------
+# # Compare medium vs. heavy sets
+# # --------------------------------------------------------------
 
-all_axis_df = (
-    df.query(f"label=='{label}'").query(f"participant=='{participant}'").reset_index()
-)
+# category_df = df.query("label=='squat'").query("participant=='A'").reset_index()
 
-fig, ax = plt.subplots()
-ax.set_ylabel("acc_y")
-ax.set_xlabel("samples")
+# fig, ax = plt.subplots()
+# ax.set_ylabel("acc_y")
+# ax.set_xlabel("samples")
 
-all_axis_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax)
-plt.legend()
-
-# --------------------------------------------------------------
-# Create a loop to plot all combinations per sensor
-# --------------------------------------------------------------
-
-labels = df["label"].unique()
-participants = df["participant"].unique()
-
-for label in labels:
-    for participant in participants:
-        all_axis_df = (
-            df.query(f"label=='{label}'")
-            .query(f"participant=='{participant}'")
-            .reset_index()
-        )
-        if len(all_axis_df) > 0:
-            fig, ax = plt.subplots()
-            ax.set_ylabel("acc_y")
-            ax.set_xlabel("samples")
-
-            all_axis_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax)
-            plt.title(f"{label} ({participant})".title())
-            plt.legend()
-for label in labels:
-    for participant in participants:
-        all_axis_df = (
-            df.query(f"label=='{label}'")
-            .query(f"participant=='{participant}'")
-            .reset_index()
-        )
-        if len(all_axis_df) > 0:
-            fig, ax = plt.subplots()
-            ax.set_ylabel("gyr_y")
-            ax.set_xlabel("samples")
-
-            all_axis_df[["gyr_y", "gyr_x", "gyr_z"]].plot(ax=ax)
-            plt.title(f"{label} ({participant})".title())
-            plt.legend()
+# category_df.groupby(["category"])["acc_y"].plot()
+# plt.legend()
 
 
-# --------------------------------------------------------------
-# Combine plots in one figure
-# --------------------------------------------------------------
-label = "row"
-participant = "A"
+# # --------------------------------------------------------------
+# # Compare participants
+# # --------------------------------------------------------------
+# participants_df = df.query("label=='bench'").sort_values("participant").reset_index()
 
-combined_plots_df = (
-    df.query(f"label=='{label}'")
-    .query(f"participant=='{participant}'")
-    .reset_index(drop=True)
-)
+# fig, ax = plt.subplots()
+# ax.set_ylabel("acc_y")
+# ax.set_xlabel("samples")
 
-fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(20, 10))
+# participants_df.groupby(["participant"])["acc_y"].plot()
+# plt.legend()
 
-combined_plots_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax[0])
-combined_plots_df[["gyr_y", "gyr_x", "gyr_z"]].plot(ax=ax[1])
 
-ax[0].legend(
-    loc="upper center", bbox_to_anchor=(0.5, 1.15), ncols=3, fancybox=True, shadow=True
-)
-ax[1].legend(
-    loc="upper center", bbox_to_anchor=(0.5, 1.15), ncols=3, fancybox=True, shadow=True
-)
-ax[1].set_xlabel("samples")
+# # --------------------------------------------------------------
+# # Plot multiple axis
+# # --------------------------------------------------------------
+
+# label = "squat"
+# participant = "A"
+
+# all_axis_df = (
+#     df.query(f"label=='{label}'").query(f"participant=='{participant}'").reset_index()
+# )
+
+# fig, ax = plt.subplots()
+# ax.set_ylabel("acc_y")
+# ax.set_xlabel("samples")
+
+# all_axis_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax)
+# plt.legend()
+
+# # --------------------------------------------------------------
+# # Create a loop to plot all combinations per sensor
+# # --------------------------------------------------------------
+
+# labels = df["label"].unique()
+# participants = df["participant"].unique()
+
+# for label in labels:
+#     for participant in participants:
+#         all_axis_df = (
+#             df.query(f"label=='{label}'")
+#             .query(f"participant=='{participant}'")
+#             .reset_index()
+#         )
+#         if len(all_axis_df) > 0:
+#             fig, ax = plt.subplots()
+#             ax.set_ylabel("acc_y")
+#             ax.set_xlabel("samples")
+
+#             all_axis_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax)
+#             plt.title(f"{label} ({participant})".title())
+#             plt.legend()
+# for label in labels:
+#     for participant in participants:
+#         all_axis_df = (
+#             df.query(f"label=='{label}'")
+#             .query(f"participant=='{participant}'")
+#             .reset_index()
+#         )
+#         if len(all_axis_df) > 0:
+#             fig, ax = plt.subplots()
+#             ax.set_ylabel("gyr_y")
+#             ax.set_xlabel("samples")
+
+#             all_axis_df[["gyr_y", "gyr_x", "gyr_z"]].plot(ax=ax)
+#             plt.title(f"{label} ({participant})".title())
+#             plt.legend()
+
+
+# # --------------------------------------------------------------
+# # Combine plots in one figure
+# # --------------------------------------------------------------
+# label = "row"
+# participant = "A"
+
+# combined_plots_df = (
+#     df.query(f"label=='{label}'")
+#     .query(f"participant=='{participant}'")
+#     .reset_index(drop=True)
+# )
+
+# fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(20, 10))
+
+# combined_plots_df[["acc_y", "acc_x", "acc_z"]].plot(ax=ax[0])
+# combined_plots_df[["gyr_y", "gyr_x", "gyr_z"]].plot(ax=ax[1])
+
+# ax[0].legend(
+#     loc="upper center", bbox_to_anchor=(0.5, 1.15), ncols=3, fancybox=True, shadow=True
+# )
+# ax[1].legend(
+#     loc="upper center", bbox_to_anchor=(0.5, 1.15), ncols=3, fancybox=True, shadow=True
+# )
+# ax[1].set_xlabel("samples")
 # --------------------------------------------------------------
 # Loop over all combinations and export for both sensors
 # --------------------------------------------------------------
